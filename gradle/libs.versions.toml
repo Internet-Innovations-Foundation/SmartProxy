@@ -34,7 +34,7 @@ hilt = { group = "com.google.dagger", name = "hilt-android", version = "2.50" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version = "2.50" }
 multidex = { group = "androidx.multidex", name = "multidex", version = "2.0.1" }
 androidx-media3-datasource-okhttp = { group = "androidx.media3", name = "media3-datasource-okhttp", version.ref = "media3DatasourceOkhttp" }
-outline = { module = "com.github.r-mobile:outline_sdk", version.ref = "outline_sdk" }
+outline = { module = "com.github.Internet-Innovations-Foundation:outline-sdk", version.ref = "outline_sdk" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
 retrofit-converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 retrofit-logger = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }

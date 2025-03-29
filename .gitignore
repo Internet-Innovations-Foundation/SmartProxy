@@ -79,3 +79,4 @@ lint/tmp/
 
 # Android Profiling
 *.hprof
+local.properties

@@ -58,16 +58,28 @@ You can view the settings for the default connection strategy [here](https://git
 You can learn more about configuring Outline SDK [here](https://github.com/Jigsaw-Code/outline-sdk/tree/main/x/mobileproxy#configure-and-run-the-local-proxy-forwarder).
 
 
-The following example demonstrates how to initialize and start the proxy using OutlineProxy with its default configuration:
+You can use two types of connections: Smart and Default.
+The Smart mode provides more flexible configuration cycling to bypass blocking.
+Below is a code example showing how to create either *SmartOutlineProxyImpl* or *DefaultOutlineProxyImpl*.
 
 ```kotlin
-fun getDefaultProxy(): AppProxy {
+fun getSmartProxy(): AppProxy {
 	val defaultMediaHost = "https://dwamdstream102.akamaized.net/"
-	val defaultConfig = OutlineConfigImpl.default(defaultMediaHost)  
-	return OutlineProxyImpl(defaultConfig)
+	val defaultConfig = SmartOutlineConfigImpl.default(defaultMediaHost)  
+	return SmartOutlineProxyImpl(defaultConfig)
 }
 ```
 *defaultMediaHost* is used for the correct selection of a strategy in [Outline SDK](https://github.com/Jigsaw-Code/outline-sdk/tree/main/x/mobileproxy#using-the-smart-proxy).
+
+
+
+```kotlin
+fun getDefaultProxy(): AppProxy {
+	val config = "doh:name=cloudflare-dns.com.&address=cloudflare.net.:443|split:2|tlsfrag:10"
+	val outlineConfig = DefaultOutlineConfigImpl(config)
+	return DefaultOutlineProxyImpl(defaultConfig)
+}
+```
 
 Next, create a proxy manager: 
 

@@ -4,14 +4,15 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import org.iif.smart_proxy.data.ProxyManager
-import org.iif.smart_proxy.data.outline.OutlineConfigImpl
-import org.iif.smart_proxy.data.outline.OutlineProxyImpl
-import org.iif.smart_proxy.domain.AppProxy
-import org.iif.smart_demo.network.MediaApi
-import org.iif.smart_demo.utils.Const
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.iif.smart_demo.network.MediaApi
+import org.iif.smart_demo.utils.Const
+import org.iif.smart_proxy.data.ProxyManager
+import org.iif.smart_proxy.data.outline.smart.SmartOutlineConfigImpl
+import org.iif.smart_proxy.data.outline.smart.SmartOutlineProxyImpl
+import org.iif.smart_proxy.domain.AppProxy
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -25,16 +26,18 @@ internal object AppModule {
     @Provides
     @Singleton
     fun provideOutlineProxy(): AppProxy {
-        val defaultConfig = OutlineConfigImpl.default(Const.DEFAULT_URL)
-        return OutlineProxyImpl(defaultConfig)
+        val defaultConfig = SmartOutlineConfigImpl.default(Const.DEFAULT_URL)
+        return SmartOutlineProxyImpl(defaultConfig)
     }
 
     @Provides
     @Singleton
-    fun provideProxyManager(proxy: AppProxy): ProxyManager {
-        return ProxyManager(proxy)
+    fun provideProxyManager(proxy: AppProxy): ProxyManager = runBlocking {
+        val proxyManager = ProxyManager(proxy)
+        proxyManager.start()
+        proxyManager
     }
-    //endregion
+//endregion
 
     //region Retrofit
     @Provides
@@ -44,7 +47,9 @@ internal object AppModule {
             setLevel(HttpLoggingInterceptor.Level.BODY)
         }
 
-        return OkHttpClient.Builder().addInterceptor(logging).build()
+        return OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .build()
     }
 
     @Provides
@@ -62,5 +67,5 @@ internal object AppModule {
     fun provideApi(retrofit: Retrofit): MediaApi {
         return retrofit.create(MediaApi::class.java)
     }
-    //endregion
+//endregion
 }

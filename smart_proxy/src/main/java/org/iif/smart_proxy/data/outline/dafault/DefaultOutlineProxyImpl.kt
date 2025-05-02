@@ -1,19 +1,18 @@
-package org.iif.smart_proxy.data.outline
+package org.iif.smart_proxy.data.outline.dafault
 
-import org.iif.smart_proxy.domain.AppProxy
-import org.iif.smart_proxy.domain.ConnectionStatus
-import org.iif.smart_proxy.domain.ProxyConfig
 import mobileproxy.Mobileproxy
 import mobileproxy.Proxy
 import mobileproxy.StreamDialer
+import org.iif.smart_proxy.domain.AppProxy
+import org.iif.smart_proxy.domain.ConnectionStatus
+import org.iif.smart_proxy.domain.ProxyConfig
 
 /**
- * Outline proxy implementation.
- * @param config - outline config.
+ * Outline proxy implementation for simple dialer.
+ * @param config - outline config implementation.
  */
-class OutlineProxyImpl(config: OutlineConfigImpl) : AppProxy {
+class DefaultOutlineProxyImpl(private var _config: DefaultOutlineConfigImpl) : AppProxy {
 
-    private var _config: OutlineConfigImpl = config
     private val _localHost = "localhost:0"
     private var _outlineProxy: Proxy? = null
     private var _connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
@@ -29,14 +28,10 @@ class OutlineProxyImpl(config: OutlineConfigImpl) : AppProxy {
     }
 
     /**
-     * Run new smart stream dialer.
+     * Run new stream dialer.
      */
     private fun runSmartStreamDialer() {
-        _streamDialer = Mobileproxy.newSmartStreamDialer(
-            Mobileproxy.newListFromLines(_config.getTargetHost()),
-            _config.getConfig(),
-            Mobileproxy.newStderrLogWriter()
-        )
+        _streamDialer = StreamDialer(_config.getConfig())
     }
 
     /**
@@ -52,7 +47,7 @@ class OutlineProxyImpl(config: OutlineConfigImpl) : AppProxy {
      * @param config - new config.
      */
     override suspend fun updateConfig(config: ProxyConfig<*>) {
-        if (config !is OutlineConfigImpl) return
+        if (config !is DefaultOutlineConfigImpl) return
         _config = config
         start()
     }

@@ -1,4 +1,4 @@
-package org.iif.smart_proxy.data.outline
+package org.iif.smart_proxy.data.outline.smart
 
 import android.net.Uri
 import com.google.gson.Gson
@@ -6,12 +6,12 @@ import org.iif.smart_proxy.domain.ProxyConfig
 import org.iif.smart_proxy.utils.Utils
 
 /**
- * Outline config implementation.
+ * Outline config implementation for smart dialer.
  * @param targetUrl - stream url.
  * @param dns - dns list.
  * @param tls - tls list.
  */
-data class OutlineConfigImpl(
+data class SmartOutlineConfigImpl(
     val targetUrl: String,
     val dns: List<*>?,
     val tls: List<*>?
@@ -44,9 +44,9 @@ data class OutlineConfigImpl(
          * @param defaultUrl - default stream url.
          * @return default config.
          */
-        fun default(defaultUrl: String): OutlineConfigImpl {
+        fun default(defaultUrl: String): SmartOutlineConfigImpl {
             return Gson()
-                .fromJson(Utils.OUTLINE_DEFAULT_CONFIG, OutlineConfigImpl::class.java)
+                .fromJson(Utils.OUTLINE_DEFAULT_CONFIG, SmartOutlineConfigImpl::class.java)
                 .copy(targetUrl = defaultUrl)
         }
     }

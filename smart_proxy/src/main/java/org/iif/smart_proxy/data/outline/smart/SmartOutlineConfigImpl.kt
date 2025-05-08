@@ -12,6 +12,7 @@ import org.iif.smart_proxy.utils.Utils
  * @param tls - tls list.
  */
 data class SmartOutlineConfigImpl(
+    @Transient
     val targetUrl: String,
     val dns: List<*>?,
     val tls: List<*>?
@@ -26,7 +27,7 @@ data class SmartOutlineConfigImpl(
         val hosts = targetUrl.split("\n")
         hosts.forEachIndexed { index, s ->
             hostString += Uri.parse(s).host
-            if(index != hosts.size - 1) hostString += "\n"
+            if (index != hosts.size - 1) hostString += "\n"
         }
         return hostString
     }

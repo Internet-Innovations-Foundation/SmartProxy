@@ -48,7 +48,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":smart_proxy"))
+    implementation(project(":smartproxy"))
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
     implementation(libs.multidex)

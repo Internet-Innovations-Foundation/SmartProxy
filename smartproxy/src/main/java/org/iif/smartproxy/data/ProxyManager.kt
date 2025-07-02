@@ -10,7 +10,7 @@ import java.net.Proxy
  * It provides methods to start, stop, update config and get proxy.
  * @param _proxy - app proxy.
  */
-class ProxyManager(private val _proxy: AppProxy) {
+class ProxyManager(private var _proxy: AppProxy) {
 
     /**
      * Start proxy.
@@ -27,11 +27,22 @@ class ProxyManager(private val _proxy: AppProxy) {
     }
 
     /**
-     * Update proxy config.
+     * Update current proxy config.
      * @param config - new config.
      */
     suspend fun updateConfig(config: ProxyConfig<*>) {
         _proxy.updateConfig(config)
+    }
+
+    /**
+     * Change proxy. This method stops the current proxy, changes it to the new one and starts it again.
+     * @param appProxy - new app proxy.
+     * @param autoStart - if true, proxy will be started after changing.
+     */
+    suspend fun changeProxy(appProxy: AppProxy, autoStart: Boolean = true) {
+        stop()
+        _proxy = appProxy
+        if (autoStart) start()
     }
 
     /**

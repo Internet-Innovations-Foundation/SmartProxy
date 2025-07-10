@@ -336,13 +336,13 @@ struct mphdr *parse_hosts(char *buffer, size_t size)
             }
         } 
         else {
-            LOG(LOG_E, "invalid host: num: %zd \"%.*s\"\n", num + 1, ((int )(e - s)), s);
+
             drop = 0;
         }
         num++;
         s = e + 1;
     }
-    LOG(LOG_S, "hosts count: %zd\n", hdr->count);
+
     return hdr;
 }
 
@@ -399,7 +399,7 @@ struct mphdr *parse_ipset(char *buffer, size_t size)
         char ip_stack[sizeof(struct in6_addr)];
         int bits = parse_ip(ip_stack, ip, sizeof(ip));
         if (bits <= 0) {
-            LOG(LOG_E, "invalid ip: num: %zd\n", num);
+
             continue;
         }
         int len = bits / 8 + (bits % 8 ? 1 : 0);
@@ -413,7 +413,7 @@ struct mphdr *parse_ipset(char *buffer, size_t size)
             return 0;
         }
     }
-    LOG(LOG_S, "ip count: %zd\n", hdr->count);
+
     return hdr;
 }
 
@@ -1190,7 +1190,7 @@ int main(int argc, char **argv)
         }
     }
     if ((size_t )params.dp_n > sizeof(dp->bit) * 8) {
-        LOG(LOG_E, "too many groups!\n");
+
     }
     if (params.baddr.sa.sa_family != AF_INET6) {
         params.ipv6 = 0;
@@ -1222,7 +1222,7 @@ int main(int argc, char **argv)
     int status = run(&params.laddr);
     
     for (dp = params.dp; dp; dp = dp->next) {
-        LOG(LOG_S, "group: %d, triggered: %d, pri: %d\n", dp->id, dp->fail_count, dp->pri);
+
     }
     if (params.cache_file) {
         FILE *f;

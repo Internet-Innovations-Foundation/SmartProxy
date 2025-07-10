@@ -48,7 +48,7 @@ struct eval *add_event(struct poolhd *pool, evcb_t cb,
 {
     assert(fd > 0);
     if (pool->count >= pool->max) {
-        LOG(LOG_E, "add_event: pool is full\n");
+
         return 0;
     }
     struct eval *val = pool->links[pool->count];
@@ -81,9 +81,6 @@ struct eval *add_event(struct poolhd *pool, evcb_t cb,
 void del_event(struct poolhd *pool, struct eval *val) 
 {
     assert(val->fd >= -1 && val->mod_iter <= pool->iters);
-    LOG(LOG_S, "close: fd=%d (pair=%d), recv: %zd, rounds: %d\n", 
-        val->fd, val->pair ? val->pair->fd : -1, 
-        val->recv_count, val->round_count);
     if (val->fd == -1) {
         return;
     }
@@ -329,7 +326,7 @@ void loop_event(struct poolhd *pool)
             uniperror("(e)poll");
             break;
         }
-        LOG(LOG_L, "new event: fd: %d, type: %d\n", val->fd, etype);
+
         
         int ret = (*val->cb)(pool, val, etype);
         if (ret < 0) {
@@ -352,7 +349,7 @@ struct buffer *buff_pop(struct poolhd *pool, size_t size)
             uniperror("malloc");
             return 0;
         }
-        LOG(LOG_S, "alloc new buffer\n");
+
         
         memset(buff, 0, sizeof(struct buffer));
         buff->size = size;
@@ -387,6 +384,6 @@ void buff_destroy(struct buffer *root)
         root = root->next;
         free(c);
     }
-    LOG(LOG_S, "buffers count: %d\n", i);
+
 }
 

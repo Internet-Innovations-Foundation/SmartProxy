@@ -84,11 +84,11 @@ static bool sock_has_notsent(int sfd)
         return 0;
     }
     if (tcpi.tcpi_state != 1) {
-        LOG(LOG_E, "state: %d\n", tcpi.tcpi_state);
+
         return 0;
     }
     if (ts <= offsetof(struct tcp_info, tcpi_notsent_bytes)) {
-        LOG(LOG_E, "tcpi_notsent_bytes not provided\n");
+
         return 0;
     }
     return tcpi.tcpi_notsent_bytes != 0;
@@ -139,7 +139,7 @@ static struct packet get_tcp_fake(const char *buffer, ssize_t n,
             if (!sni || !change_tls_sni(sni, p, n, n)) {
                 break;
             }
-            LOG(LOG_E, "change sni error\n");
+
         }
         memcpy(p, pkt.data, pkt.size);
         if (sni && change_tls_sni(sni, p, pkt.size, n) < 0) {
@@ -281,7 +281,7 @@ static HANDLE openTempFile(void)
         uniperror("GetTempFileName");
         return 0;
     }
-    LOG(LOG_L, "temp file: %s\n", path);
+
     
     HANDLE hfile = CreateFileA(path, GENERIC_READ | GENERIC_WRITE, 
         FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, 
@@ -467,9 +467,9 @@ static void tamp(char *buffer, size_t bfsize, ssize_t *n,
         const struct desync_params *dp, struct proto_info *info)
 {
     if (dp->mod_http && is_http(buffer, *n)) {
-        LOG(LOG_S, "modify HTTP: n=%zd\n", *n);
+
         if (mod_http(buffer, *n, dp->mod_http)) {
-            LOG(LOG_E, "mod http error\n");
+
         }
     }
     else if (dp->tlsrec_n && is_tls_chello(buffer, *n)) {
@@ -491,15 +491,15 @@ static void tamp(char *buffer, size_t bfsize, ssize_t *n,
             }
             pos += (long )part.s * (part.r - r);
             if (pos < lp) {
-                LOG(LOG_E, "tlsrec cancel: %ld < %ld\n", pos, lp);
+
                 break;
             }
             if (!part_tls(buffer + lp, 
                     bfsize - lp, *n - lp, pos - lp)) {
-                LOG(LOG_E, "tlsrec error: pos=%ld, n=%zd\n", pos, *n);
+
                 break;
             }
-            LOG(LOG_S, "tlsrec: pos=%ld, n=%zd\n", pos, *n);
+
             *n += 5;
             lp = pos + 5;
         }
@@ -524,14 +524,6 @@ ssize_t desync(struct poolhd *pool,
     
     if (!skip && LOG_ENABLED) {
         init_proto_info(buffer, *np, &info);
-        
-        if (info.host_pos) {
-            LOG(LOG_S, "host: %.*s (%d)\n",
-                info.host_len, buffer + info.host_pos, info.host_pos);
-        } else {
-            INIT_HEX_STR(buffer, (*np > 16 ? 16 : *np));
-            LOG(LOG_S, "bytes: %s (%zd)\n", HEX_STR, *np);
-        }
     }
     if (!skip) {
         tamp(buffer, bfsize, np, &dp, &info);
@@ -562,7 +554,7 @@ ssize_t desync(struct poolhd *pool,
             continue;
         }
         if (pos < 0 || pos > n || pos < lp) {
-            LOG(LOG_E, "split cancel: pos=%ld-%ld, n=%zd\n", lp, pos, n);
+
             break;
         }
         ssize_t s = 0;
@@ -616,7 +608,7 @@ ssize_t desync(struct poolhd *pool,
                 s = send(sfd, buffer + lp, pos - lp, 0);
                 break;
         }
-        LOG(LOG_S, "split: pos=%ld-%ld (%zd), m: %s\n", lp, pos, s, demode_str[part.m]);
+
         }
         val->pair->part_sent = curr_part;
 
@@ -632,14 +624,14 @@ ssize_t desync(struct poolhd *pool,
             return -1;
         }
         else if (s != (pos - lp)) {
-            LOG(LOG_E, "%zd != %ld\n", s, pos - lp);
+
             return lp + s - offset;
         }
         
         if (sock_has_notsent(sfd) 
                 || (params.wait_send 
                     && curr_part > part_skip)) {
-            LOG(LOG_S, "sock_has_notsent\n");
+
             set_timer(pool, val, params.await_int);
             *wait = true;
             return pos - offset;
@@ -694,7 +686,7 @@ ssize_t desync_udp(int sfd, char *buffer,
 {
     if (LOG_ENABLED) {
         INIT_HEX_STR(buffer, (n > 16 ? 16 : n));
-        LOG(LOG_S, "bytes: %s (%zd)\n", HEX_STR, n);
+
     }
     if (dp->udp_fake_count != 0) {
         struct packet pkt;

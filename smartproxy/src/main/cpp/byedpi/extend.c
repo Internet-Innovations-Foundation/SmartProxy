@@ -74,7 +74,7 @@ static struct elem_i *cache_get(const union sockaddr_u *dst)
     }
     time_t t = time(0);
     if (t > val->time + params.cache_ttl) {
-        LOG(LOG_S, "time=%jd, now=%jd, ignore\n", (intmax_t)val->time, (intmax_t)t);
+
         mem_delete(params.mempool, (char *)&key, len);
         return 0;
     }
@@ -273,7 +273,7 @@ static bool check_round(const int *nr, int r)
 
 static void swop_groups(struct desync_params *dpc, struct desync_params *dpn)
 {
-    LOG(LOG_S, "swop: %d <-> %d\n", dpc->id, dpn->id);
+
     
     struct desync_params dpc_cp = *dpc;
     dpc->next = dpn->next;
@@ -348,13 +348,13 @@ static int on_trigger(int type, struct poolhd *pool, struct eval *val)
         lav->dp->pri++;
     }
     if (!next) {
-        LOG(LOG_S, "unreach ip: %s\n", ADDR_STR);
+
         cache->dp_mask = 0;
         cache->detect = 0;
         cache->dp = params.dp;
         return -1;
     }
-    LOG(LOG_S, "save: ip=%s, id=%d\n", ADDR_STR, next->id);
+
     
     cache->dp_mask |= lav->dp_mask;
     cache->detect = lav->detect;
@@ -469,7 +469,7 @@ static int setup_conn(struct eval *client, const char *buffer, ssize_t n)
         client->dp_mask |= dp->bit;
     }
     if (!dp) {
-        LOG(LOG_E, "drop connection\n");
+
         return -1;
     }
     if ((params.auto_level & (AUTO_POST | AUTO_RECONN)) && params.dp->next) {
@@ -520,7 +520,7 @@ ssize_t tcp_send_hook(struct poolhd *pool,
             skip = 1;
         }
         else {
-            LOG(LOG_S, "desync TCP: group=%d, round=%d, fd=%d\n", client->dp->id, r, remote->fd);
+
             sn = desync(pool, remote, buff, n, wait);
         }
     }
@@ -629,7 +629,7 @@ ssize_t udp_hook(struct eval *val,
     if (!check_round(dp->rounds, r)) {
         return send(val->fd, buffer, n, 0);
     }
-    LOG(LOG_S, "desync UDP: group=%d, round=%d, fd=%d\n", dp->id, r, val->fd);
+
     return desync_udp(val->fd, buffer, n, &dst->sa, dp);
 }
 

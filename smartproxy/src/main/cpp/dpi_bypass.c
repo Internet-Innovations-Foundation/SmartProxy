@@ -52,7 +52,6 @@ Java_org_iif_smartproxy_utils_ByeDpiHelper_jniStartProxy(JNIEnv *env, __attribut
 
     int result = main(argc, argv);
     if (result < 0) {
-        LOG(LOG_S, "proxy failed to start");
         g_proxy_running = 0;
         return result;
     }

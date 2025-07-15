@@ -4,7 +4,7 @@
 
 The ***Smart Proxy*** library enables quick and efficient integration of media streaming capabilities into your application using a proxy to bypass content restrictions in your country.
 
-Currently, the library utilizes [Outline SDK](https://github.com/Jigsaw-Code/outline-sdk) as its proxy solution. In future updates, we plan to add alternative proxy services for even greater flexibility. To facilitate seamless player implementation, the library provides extensions for [ExoPlayer](https://developer.android.com/media/media3/exoplayer), allowing you to stream media content effortlessly. The library is independent of the architecture or UI framework you are using.
+Currently, the library utilizes [Outline SDK](https://github.com/Jigsaw-Code/outline-sdk) and [ByeDPI](https://github.com/hufrea/byedpi) as its proxy solution. In future updates, we plan to add alternative proxy services for even greater flexibility. To facilitate seamless player implementation, the library provides extensions for [ExoPlayer](https://developer.android.com/media/media3/exoplayer), allowing you to stream media content effortlessly. The library is independent of the architecture or UI framework you are using.
 
 ## Installation
 To integrate the library into your application, add the following repository:
@@ -53,14 +53,9 @@ You can find the latest version of the library on [JitPack](https://jitpack.io/#
 
 ## Configuration
 
-To enable proxy support in your application, you can either use the default *OutlineProxy* settings or configure it with custom parameters. 
-You can view the settings for the default connection strategy [here](https://github.com/Internet-Innovations-Foundation/SmartProxy/blob/main/smart_proxy/src/main/java/org/iif/smart_proxy/utils/OutlideDefaultConfig.kt).
-You can learn more about configuring Outline SDK [here](https://github.com/Jigsaw-Code/outline-sdk/tree/main/x/mobileproxy#configure-and-run-the-local-proxy-forwarder).
+To enable proxy support in your application, you can use one of the following configuration options:
+1. ***Outline Smart Proxy*** – To use this, create a SmartOutlineConfigImpl by specifying the target media host for which the bypass strategy should be applied, and then pass this configuration to SmartOutlineProxyImpl. Below is a code example demonstrating how to create a SmartOutlineProxyImpl:
 
-
-You can use two types of connections: Smart and Default.
-The Smart mode provides more flexible configuration cycling to bypass blocking.
-Below is a code example showing how to create either *SmartOutlineProxyImpl* or *DefaultOutlineProxyImpl*.
 
 ```kotlin
 fun getSmartProxy(): AppProxy {
@@ -69,8 +64,10 @@ fun getSmartProxy(): AppProxy {
 	return SmartOutlineProxyImpl(defaultConfig)
 }
 ```
-*defaultMediaHost* is used for the correct selection of a strategy in [Outline SDK](https://github.com/Jigsaw-Code/outline-sdk/tree/main/x/mobileproxy#using-the-smart-proxy).
 
+2. ***Outline Default Proxy*** – To use this, create a DefaultOutlineConfigImpl by providing the connection strategy parameters, and pass the configuration to DefaultOutlineProxyImpl.
+You can view the default connection strategy parameters [here](https://github.com/Internet-Innovations-Foundation/SmartProxy/blob/main/smart_proxy/src/main/java/org/iif/smart_proxy/utils/OutlideDefaultConfig.kt).
+More information about configuring Outline SDK can be found [here](https://github.com/Jigsaw-Code/outline-sdk/tree/main/x/mobileproxy#configure-and-run-the-local-proxy-forwarder). Below is a code example demonstrating how to create a DefaultOutlineProxyImpl:
 
 
 ```kotlin
@@ -78,6 +75,19 @@ fun getDefaultProxy(): AppProxy {
 	val config = "doh:name=cloudflare-dns.com.&address=cloudflare.net.:443|split:2|tlsfrag:10"
 	val outlineConfig = DefaultOutlineConfigImpl(config)
 	return DefaultOutlineProxyImpl(defaultConfig)
+}
+```
+
+3. ***ByeDPI Proxy*** – To use this, create a ByeDpiConfigImpl by specifying the configuration string for the proxy and pass it to ByeDpiProxyImpl.
+You can view connection parameters [here](https://github.com/hufrea/byedpi/blob/main/README.md). More information about configuring ByeDPI can be found [here](https://github.com/hufrea/byedpi). Below is a code example demonstrating how to create a ByeDpiProxyImpl:
+
+```kotlin
+fun getByedpiProxy(): AppProxy {
+	// Optionally, you can specify the host and port to be used by the proxy
+	// By default, these values are 0.0.0.0 and 1080
+	val config = "--disorder 1 --auto=torst --tlsrec 1+s"
+	val byeConfig = ByeDpiConfigImpl(config)
+	return ByeDpiProxyImpl(byeConfig)
 }
 ```
 
@@ -98,6 +108,7 @@ fun updateConfig(config: ProxyConfig) // Updates the configuration and restarts 
 fun getHost(): String // Returns the proxy host
 fun getPort(): Int  // Returns the proxy port
 fun getProxy(): Proxy // Returns a net.Proxy object for use in networking layers
+fun getProxyType() // If needed, you can also specify one of the values from java.net.Proxy.Type
 ```
 
 Once the ***ProxyManager*** is configured, simply call *start()*, and the *Outline Proxy* will be ready to use.

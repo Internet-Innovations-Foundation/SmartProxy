@@ -1,8 +1,9 @@
 package org.iif.smart_demo.repo
 
-import org.iif.smart_proxy.data.ProxyManager
+import org.iif.smartproxy.data.ProxyManager
 import org.iif.smart_demo.network.MediaApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ class MainRepo @Inject constructor(
         _proxyManager.stop()
     }
 
-    suspend fun startProxy() {
+    suspend fun startProxy() = withContext(Dispatchers.IO) {
         _proxyManager.start()
     }
 

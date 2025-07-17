@@ -64,9 +64,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onDestroy() {
+    override fun onStop() {
         vm.stopProxy()
-        super.onDestroy()
+        super.onStop()
     }
 
     @Composable

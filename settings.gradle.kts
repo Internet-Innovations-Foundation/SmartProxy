@@ -22,4 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Smart Proxy"
 include(":app")
-include(":smart_proxy")
+include(":smartproxy")

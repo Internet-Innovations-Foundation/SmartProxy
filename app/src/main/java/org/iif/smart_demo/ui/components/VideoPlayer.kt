@@ -27,8 +27,8 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
-import org.iif.smart_proxy.domain.StreamData
-import org.iif.smart_proxy.utils.playStream
+import org.iif.smartproxy.domain.StreamData
+import org.iif.smartproxy.utils.playStream
 import java.net.Proxy
 
 @Composable

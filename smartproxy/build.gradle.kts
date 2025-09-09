@@ -11,16 +11,6 @@ android {
     defaultConfig {
         minSdk = 24
         consumerProguardFiles("consumer-rules.pro")
-        ndk {
-            val filters = listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            abiFilters.addAll(filters)
-        }
-    }
-
-    externalNativeBuild {
-        cmake {
-            path = file("src/main/cpp/CMakeLists.txt")
-        }
     }
 
     buildTypes {

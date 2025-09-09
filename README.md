@@ -4,7 +4,7 @@
 
 The ***Smart Proxy*** library enables quick and efficient integration of media streaming capabilities into your application using a proxy to bypass content restrictions in your country.
 
-Currently, the library utilizes [Outline SDK](https://github.com/Jigsaw-Code/outline-sdk) and [ByeDPI](https://github.com/hufrea/byedpi) as its proxy solution. In future updates, we plan to add alternative proxy services for even greater flexibility. To facilitate seamless player implementation, the library provides extensions for [ExoPlayer](https://developer.android.com/media/media3/exoplayer), allowing you to stream media content effortlessly. The library is independent of the architecture or UI framework you are using.
+Currently, the library utilizes [Outline SDK](https://github.com/Jigsaw-Code/outline-sdk) as its proxy solution. In future updates, we plan to add alternative proxy services for even greater flexibility. To facilitate seamless player implementation, the library provides extensions for [ExoPlayer](https://developer.android.com/media/media3/exoplayer), allowing you to stream media content effortlessly. The library is independent of the architecture or UI framework you are using.
 
 ## Installation
 To integrate the library into your application, add the following repository:
@@ -75,19 +75,6 @@ fun getDefaultProxy(): AppProxy {
 	val config = "doh:name=cloudflare-dns.com.&address=cloudflare.net.:443|split:2|tlsfrag:10"
 	val outlineConfig = DefaultOutlineConfigImpl(config)
 	return DefaultOutlineProxyImpl(defaultConfig)
-}
-```
-
-3. ***ByeDPI Proxy*** – To use this, create a ByeDpiConfigImpl by specifying the configuration string for the proxy and pass it to ByeDpiProxyImpl.
-You can view connection parameters [here](https://github.com/hufrea/byedpi/blob/main/README.md). More information about configuring ByeDPI can be found [here](https://github.com/hufrea/byedpi). Below is a code example demonstrating how to create a ByeDpiProxyImpl:
-
-```kotlin
-fun getByedpiProxy(): AppProxy {
-	// Optionally, you can specify the host and port to be used by the proxy
-	// By default, these values are 0.0.0.0 and 1080
-	val config = "--disorder 1 --auto=torst --tlsrec 1+s"
-	val byeConfig = ByeDpiConfigImpl(config)
-	return ByeDpiProxyImpl(byeConfig)
 }
 ```
 

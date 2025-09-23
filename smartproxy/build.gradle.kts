@@ -45,7 +45,8 @@ afterEvaluate {
 }
 
 dependencies {
-    implementation(libs.outline)
+    //implementation(libs.outline)
+    implementation(files("libs/outline-sdk-1.0.0.aar"))
     implementation(libs.coroutines)
     implementation(libs.okhttp)
     implementation(libs.androidx.webkit)

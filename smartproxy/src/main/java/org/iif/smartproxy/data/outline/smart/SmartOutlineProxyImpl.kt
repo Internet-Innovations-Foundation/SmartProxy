@@ -1,11 +1,37 @@
 package org.iif.smartproxy.data.outline.smart
 
+import android.util.Log
 import org.iif.smartproxy.domain.AppProxy
 import org.iif.smartproxy.domain.ConnectionStatus
 import org.iif.smartproxy.domain.ProxyConfig
 import mobileproxy.Mobileproxy
 import mobileproxy.Proxy
 import mobileproxy.StreamDialer
+import mobileproxy.SmartDialerOptions
+import mobileproxy.StrategyCache
+
+// Pseudo Kotlin cache interface for strategy cache
+// In-Memory Cache Implementation
+class InMemoryStrategyCache : StrategyCache {
+    private val cache = mutableMapOf<String, String>()
+    private val lock = Any()
+
+    override fun get(key: String): String {
+        synchronized(lock) {
+            return cache[key] ?: ""
+        }
+    }
+
+    override fun put(key: String, value: String) {
+        synchronized(lock) {
+            if (value.isEmpty()) {
+                cache.remove(key)
+            } else {
+                cache[key] = value
+            }
+        }
+    }
+}
 
 /**
  * Outline proxy implementation for smart dialer.
@@ -20,6 +46,8 @@ class SmartOutlineProxyImpl(config: SmartOutlineConfigImpl) : AppProxy {
     private var _connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
     private var _streamDialer: StreamDialer? = null
 
+    private var _streamDialerOptions: SmartDialerOptions? = null
+
     /**
      * Start outline proxy.
      */
@@ -33,11 +61,12 @@ class SmartOutlineProxyImpl(config: SmartOutlineConfigImpl) : AppProxy {
      * Run new smart stream dialer.
      */
     private fun runSmartStreamDialer() {
-        _streamDialer = Mobileproxy.newSmartStreamDialer(
-            Mobileproxy.newListFromLines(_config.getTargetHost()),
-            _config.getConfig(),
-            Mobileproxy.newStderrLogWriter()
-        )
+        // Starting StreamDialer via newSmartDialerOptions
+        val cache = InMemoryStrategyCache()
+        _streamDialerOptions = Mobileproxy.newSmartDialerOptions(Mobileproxy.newListFromLines(_config.getTargetHost()), _config.getConfig())
+        _streamDialerOptions?.setStrategyCache(cache)
+        _streamDialer = _streamDialerOptions?.newStreamDialer()
+        Log.d("OUTLINE", _streamDialerOptions?.getTLSTransportStrategy().toString()) // Winning TLS strategy
     }
 
     /**

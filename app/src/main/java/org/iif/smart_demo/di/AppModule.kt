@@ -4,11 +4,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.iif.smart_demo.network.MediaApi
 import org.iif.smart_demo.utils.Const
 import org.iif.smartproxy.data.ProxyManager
+import org.iif.smartproxy.data.bye_dpi.ByeDpiConfigImpl
+import org.iif.smartproxy.data.bye_dpi.ByeDpiProxyImpl
 import org.iif.smartproxy.data.outline.smart.SmartOutlineConfigImpl
 import org.iif.smartproxy.data.outline.smart.SmartOutlineProxyImpl
 import org.iif.smartproxy.domain.AppProxy
@@ -28,6 +31,13 @@ internal object AppModule {
         val defaultConfig = SmartOutlineConfigImpl.default(Const.DEFAULT_URL)
         return SmartOutlineProxyImpl(defaultConfig)
     }
+
+//    @Provides
+//    @Singleton
+//    fun provideByeDpiProxy(): AppProxy {
+//        val byeDpiConfigImpl = ByeDpiConfigImpl(config = "-d3+s -s443 -f1")
+//        return ByeDpiProxyImpl(byeDpiConfigImpl)
+//    }
 
     @Provides
     @Singleton

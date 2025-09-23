@@ -11,6 +11,16 @@ android {
     defaultConfig {
         minSdk = 24
         consumerProguardFiles("consumer-rules.pro")
+        ndk {
+            val filters = listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            abiFilters.addAll(filters)
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+        }
     }
 
     buildTypes {
@@ -45,8 +55,7 @@ afterEvaluate {
 }
 
 dependencies {
-    //implementation(libs.outline)
-    implementation(files("libs/outline-sdk-1.0.0.aar"))
+    implementation(libs.outline)
     implementation(libs.coroutines)
     implementation(libs.okhttp)
     implementation(libs.androidx.webkit)

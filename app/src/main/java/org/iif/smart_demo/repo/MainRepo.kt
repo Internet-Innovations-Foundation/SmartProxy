@@ -25,5 +25,4 @@ class MainRepo @Inject constructor(
     suspend fun startProxy() = withContext(Dispatchers.IO) {
         _proxyManager.start()
     }
-
 }

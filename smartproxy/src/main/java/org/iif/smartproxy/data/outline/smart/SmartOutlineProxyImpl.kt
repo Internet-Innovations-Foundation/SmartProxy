@@ -5,6 +5,7 @@ import org.iif.smartproxy.domain.ConnectionStatus
 import org.iif.smartproxy.domain.ProxyConfig
 import mobileproxy.Mobileproxy
 import mobileproxy.Proxy
+import mobileproxy.SmartDialerOptions
 import mobileproxy.StreamDialer
 
 /**
@@ -19,6 +20,7 @@ class SmartOutlineProxyImpl(config: SmartOutlineConfigImpl) : AppProxy {
     private var _outlineProxy: Proxy? = null
     private var _connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
     private var _streamDialer: StreamDialer? = null
+    private var _dialerOptions: SmartDialerOptions? = null
 
     /**
      * Start outline proxy.
@@ -33,11 +35,11 @@ class SmartOutlineProxyImpl(config: SmartOutlineConfigImpl) : AppProxy {
      * Run new smart stream dialer.
      */
     private fun runSmartStreamDialer() {
-        _streamDialer = Mobileproxy.newSmartStreamDialer(
+        _dialerOptions = Mobileproxy.newSmartDialerOptions(
             Mobileproxy.newListFromLines(_config.getTargetHost()),
-            _config.getConfig(),
-            Mobileproxy.newStderrLogWriter()
-        )
+            _config.getConfig())
+        _streamDialer = _dialerOptions?.newStreamDialer()
+
     }
 
     /**
@@ -75,4 +77,10 @@ class SmartOutlineProxyImpl(config: SmartOutlineConfigImpl) : AppProxy {
      * @return connection status.
      */
     override fun getConnectionStatus() = _connectionStatus
+
+    /**
+     * Get selected strategy.
+     * @return selected connection strategy.
+     */
+    override fun getSelectedStrategy(): String? = _dialerOptions?.tlsTransportStrategy
 }

@@ -69,4 +69,10 @@ class DefaultOutlineProxyImpl(private var _config: DefaultOutlineConfigImpl) : A
      * @return connection status.
      */
     override fun getConnectionStatus() = _connectionStatus
+
+    /**
+     * Get selected strategy.
+     * @return selected connection strategy.
+     */
+    override fun getSelectedStrategy(): String? = null
 }

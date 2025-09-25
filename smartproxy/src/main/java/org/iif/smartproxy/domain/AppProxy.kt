@@ -13,7 +13,8 @@ interface AppProxy {
     fun getHost(): String?
     fun getPort(): Int?
     fun getConnectionStatus(): ConnectionStatus
-
     fun getProxyType() = Proxy.Type.HTTP
+
+    fun getSelectedStrategy(): String?
 }
 

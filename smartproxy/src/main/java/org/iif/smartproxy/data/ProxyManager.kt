@@ -73,4 +73,10 @@ class ProxyManager(private var _proxy: AppProxy) {
         }
         return Proxy(_proxy.getProxyType(), InetSocketAddress(getHost(), getPort()!!))
     }
+
+    /**
+     * Get selected strategy.
+     * @return selected strategy.
+     */
+    fun getSelectedStrategy() = _proxy.getSelectedStrategy()
 }
